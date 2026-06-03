@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlatinumRx — How are we doing?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--red:#F14D4D;--red-hover:#C22C2C;--coral:#F6764E;--coral-50:#FFE1DA;--coral-100:#F6D0C6;--ink:#1A1A1A;--ink-head:#212121;--muted:#6B6B6B;--light:#9E9E9E;--border:#EEEEEE;--white:#FFFFFF;--radius:18px;--radius-sm:13px;--font:'Manrope','Bilo','Helvetica Neue',Helvetica,Arial,sans-serif;--ease:cubic-bezier(.16,1,.3,1)}
+  *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}
+  body{font-family:var(--font);color:var(--ink);min-height:100%;-webkit-font-smoothing:antialiased;line-height:1.5;padding:32px 16px 80px;position:relative;overflow-x:hidden;background:#FFF8F6}
+  .blob{position:fixed;border-radius:50%;filter:blur(60px);opacity:.5;z-index:-1;will-change:transform}
+  .blob.b1{width:520px;height:520px;background:var(--coral-50);top:-200px;right:-120px;animation:drift1 22s var(--ease) infinite alternate}
+  .blob.b2{width:460px;height:460px;background:#FFE7E7;bottom:-200px;left:-140px;animation:drift2 26s var(--ease) infinite alternate}
+  @keyframes drift1{to{transform:translate(-50px,60px) scale(1.1)}}
+  @keyframes drift2{to{transform:translate(60px,-40px) scale(1.08)}}
+  .shell{max-width:640px;margin:0 auto}
+  .reveal{opacity:0;transform:translateY(14px);animation:enter .7s var(--ease) forwards}
+  .d1{animation-delay:.05s}.d2{animation-delay:.16s}.d3{animation-delay:.28s}
+  @keyframes enter{to{opacity:1;transform:none}}
+  .brand{display:flex;align-items:center;margin:8px 4px 22px}
+  .logo{height:30px;width:auto;display:block}
+  @media(max-width:520px){.logo{height:26px}}
+  .card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:32px 30px 8px;box-shadow:0 22px 60px rgba(193,44,43,.09),0 2px 8px rgba(0,0,0,.03)}
+  .intro h1{font-size:26px;font-weight:800;letter-spacing:-.02em;color:var(--ink-head);margin-bottom:8px}
+  .intro p{color:var(--muted);font-size:15px;max-width:48ch}
+  .bar{height:7px;background:var(--coral-50);border-radius:99px;margin:22px 0 4px;overflow:hidden;position:relative}
+  .bar>i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--coral),var(--red));transition:width .55s var(--ease);position:relative;overflow:hidden}
+  .bar>i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:translateX(-100%);animation:sheen 2.2s ease-in-out infinite}
+  @keyframes sheen{to{transform:translateX(220%)}}
+  .q{padding:26px 2px 22px;border-top:1px solid var(--border)}.q:first-of-type{border-top:none}.q.hidden{display:none}
+  .q:not(.hidden){animation:qin .5s var(--ease) both}
+  @keyframes qin{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:none}}
+  .qhead{display:flex;gap:10px;align-items:baseline;margin-bottom:16px}
+  .num{font-size:12px;font-weight:800;color:var(--red);background:var(--coral-50);border-radius:8px;padding:3px 9px;flex:0 0 auto;letter-spacing:.02em}
+  .qtext{font-size:17px;font-weight:700;color:var(--ink-head);letter-spacing:-.01em}
+  .hint{font-size:13px;color:var(--light);font-weight:500;display:block;margin-top:3px}
+  .pickcount{display:inline-block;font-size:12px;font-weight:700;color:var(--red);background:#FFF4F2;border-radius:7px;padding:3px 9px;margin-left:8px}
+  .opts{display:flex;flex-direction:column;gap:10px}
+  .opt{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:13px 15px;cursor:pointer;background:#fff;user-select:none;position:relative;overflow:hidden;transition:border-color .18s var(--ease),background .18s var(--ease),transform .12s var(--ease),box-shadow .18s var(--ease),opacity .18s var(--ease)}
+  .opt:hover{border-color:var(--coral-100);background:#FFFBFA;transform:translateY(-1px);box-shadow:0 6px 16px rgba(241,77,77,.07)}
+  .opt:active{transform:translateY(0) scale(.995)}
+  .opt input{position:absolute;opacity:0;width:0;height:0}
+  .opt::before{content:"";position:absolute;left:16px;top:50%;width:8px;height:8px;border-radius:50%;background:var(--red);opacity:.18;transform:translate(-50%,-50%) scale(0);pointer-events:none}
+  .opt.sel::before{animation:ripple .5s var(--ease)}
+  @keyframes ripple{from{transform:translate(-50%,-50%) scale(0);opacity:.3}to{transform:translate(-50%,-50%) scale(34);opacity:0}}
+  .mark{width:21px;height:21px;flex:0 0 auto;border:2px solid #d8d8d8;display:grid;place-items:center;transition:border-color .18s var(--ease),background .18s var(--ease),transform .18s var(--ease);position:relative;z-index:1}
+  .opt[data-type="radio"] .mark{border-radius:50%}
+  .opt[data-type="check"] .mark{border-radius:7px}
+  .mark::after{content:"";opacity:0;transform:scale(.4);transition:opacity .16s var(--ease),transform .22s var(--ease)}
+  .opt[data-type="radio"] .mark::after{width:9px;height:9px;border-radius:50%;background:#fff}
+  .opt[data-type="check"] .mark::after{width:6px;height:10px;border:solid #fff;border-width:0 2.5px 2.5px 0;margin-top:-2px}
+  .opt .label{font-size:15px;color:var(--ink);z-index:1}
+  .opt.sel{border-color:var(--red);background:#FFF4F2}
+  .opt.sel .mark{border-color:var(--red);background:var(--red);transform:scale(1.08)}
+  .opt.sel .mark::after{opacity:1}
+  .opt[data-type="check"].sel .mark::after{transform:rotate(42deg) scale(1)}
+  .opt[data-type="radio"].sel .mark::after{transform:scale(1)}
+  .opt.sel .label{font-weight:600}
+  /* max-reached state — unselected options dimmed and non-interactive */
+  .opts.limit-reached .opt:not(.sel){opacity:.45;pointer-events:none}
+  .opts.limit-reached .opt:not(.sel):hover{transform:none;box-shadow:none;background:#fff;border-color:var(--border)}
+  .rating{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+  .rating .opt{flex-direction:column;text-align:center;gap:6px;padding:16px 6px}
+  .rating .opt::before{left:50%;top:30%}
+  .rating .opt .score{font-size:22px;font-weight:800;color:var(--ink-head);transition:transform .25s var(--ease),color .2s var(--ease)}
+  .rating .opt.sel .score{color:var(--red);transform:scale(1.18)}
+  .rating .opt .label{font-size:11.5px;line-height:1.25;color:var(--muted)}
+  .rating .opt .mark{display:none}
+  @media(max-width:520px){.rating{gap:5px}.rating .opt{padding:12px 2px}.rating .opt .label{font-size:10px}.rating .opt .score{font-size:19px}}
+  .other-wrap{margin-top:0;max-height:0;overflow:hidden;opacity:0;transition:max-height .35s var(--ease),opacity .3s var(--ease),margin .3s var(--ease)}
+  .other-wrap.show{max-height:90px;opacity:1;margin-top:12px}
+  .other-wrap input{width:100%;border:1.5px solid var(--coral-100);border-radius:var(--radius-sm);padding:12px 14px;font-family:var(--font);font-size:15px;color:var(--ink);outline:none;background:#FFFBFA;transition:border-color .18s var(--ease),box-shadow .18s var(--ease)}
+  .other-wrap input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(241,77,77,.12)}
+  .foot{padding:24px 2px 30px;border-top:1px solid var(--border)}
+  .err{color:var(--red);font-size:13.5px;font-weight:600;margin-bottom:12px;display:none}
+  .err.show{display:block;animation:shake .4s ease}
+  @keyframes shake{10%,90%{transform:translateX(-1px)}20%,80%{transform:translateX(2px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}
+  .submit{width:100%;border:none;cursor:pointer;font-family:var(--font);font-weight:700;font-size:16px;padding:17px;border-radius:var(--radius-sm);color:#fff;letter-spacing:-.01em;position:relative;overflow:hidden;background:linear-gradient(120deg,var(--red),var(--coral));background-size:180% 100%;box-shadow:0 12px 28px rgba(241,77,77,.28);transition:background-position .5s var(--ease),transform .1s var(--ease),box-shadow .25s var(--ease)}
+  .submit:hover{background-position:100% 0;box-shadow:0 16px 34px rgba(241,77,77,.34)}
+  .submit:active{transform:translateY(1px) scale(.995)}
+  .privacy{text-align:center;font-size:12.5px;color:var(--light);margin-top:14px}
+  .done{display:none;text-align:center;padding:54px 24px 46px;position:relative}.done.show{display:block;animation:qin .55s var(--ease) both}
+  .tick{width:78px;height:78px;margin:0 auto 22px;position:relative}.tick svg{width:100%;height:100%;display:block}
+  .tick .ring{stroke:var(--coral-50);stroke-width:5;fill:none}
+  .tick .ringfill{stroke:var(--red);stroke-width:5;fill:none;stroke-linecap:round;stroke-dasharray:226;stroke-dashoffset:226;animation:draw .7s var(--ease) .15s forwards}
+  .tick .chk{stroke:var(--red);stroke-width:6;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:48;stroke-dashoffset:48;animation:draw .4s var(--ease) .7s forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .done h2{font-size:24px;font-weight:800;color:var(--ink-head);margin-bottom:8px;letter-spacing:-.02em}
+  .done p{color:var(--muted);font-size:15px;max-width:40ch;margin:0 auto}
+  .signoff{margin-top:26px;font-size:14px;color:var(--coral);font-weight:700}
+  .confetti{position:absolute;top:40px;left:50%;width:0;height:0;pointer-events:none}
+  .confetti span{position:absolute;width:8px;height:8px;border-radius:2px;opacity:0;animation:pop 1s var(--ease) .55s forwards}
+  .confetti span:nth-child(1){background:var(--red);transform:rotate(20deg);--x:-120px;--y:-30px}.confetti span:nth-child(2){background:var(--coral);--x:120px;--y:-20px}.confetti span:nth-child(3){background:#F04EA2;--x:-90px;--y:40px}.confetti span:nth-child(4){background:#00A7A7;--x:90px;--y:50px}.confetti span:nth-child(5){background:var(--red);--x:-150px;--y:30px}.confetti span:nth-child(6){background:var(--coral);--x:150px;--y:20px}.confetti span:nth-child(7){background:#F04EA2;--x:-40px;--y:-60px}.confetti span:nth-child(8){background:#00A7A7;--x:40px;--y:-70px}.confetti span:nth-child(9){background:var(--red);--x:-70px;--y:70px}.confetti span:nth-child(10){background:var(--coral);--x:70px;--y:80px}.confetti span:nth-child(11){background:#F04EA2;--x:-20px;--y:90px}.confetti span:nth-child(12){background:#00A7A7;--x:20px;--y:95px}
+  @keyframes pop{0%{opacity:0;transform:translate(0,0) scale(.4)}30%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1) rotate(180deg)}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.tick .ringfill,.tick .chk{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="shell">
+  <div class="brand reveal d1">
+    <svg class="logo" viewBox="0 0 250 51" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PlatinumRx">
+    <g clip-path="url(#clip0_3122_7084)"><path d="M11.7655 34.6756H10.0752C4.89309 34.6756 0.682617 30.4651 0.682617 25.283V25.1716C0.682617 19.9895 4.89309 15.7791 10.0752 15.7791H11.1886C12.0185 15.7791 12.6966 16.4572 12.6966 17.2871C12.6966 18.1171 12.0185 18.7952 11.1886 18.7952H10.0752C6.55299 18.7952 3.69877 21.6595 3.69877 25.1716V25.283C3.69877 28.8052 6.56311 31.6594 10.0752 31.6594H11.7655C12.5954 31.6594 13.2736 32.3376 13.2736 33.1675C13.2736 33.9975 12.5954 34.6756 11.7655 34.6756Z" fill="#FC5A5A"/><path d="M25.6827 18.7852H16.8063C15.9763 18.7852 15.2982 18.1071 15.2982 17.2771C15.2982 16.4472 15.9763 15.769 16.8063 15.769H25.6827C29.2049 15.769 32.0591 12.9047 32.0591 9.3926C32.0591 5.8805 29.1948 3.01616 25.6827 3.01616H24.5694C21.0471 3.01616 18.1929 5.8805 18.1929 9.3926V11.7711C18.1929 12.6011 17.5148 13.2792 16.6848 13.2792C15.8549 13.2792 15.1768 12.6011 15.1768 11.7711V9.3926C15.1768 4.21048 19.3872 0 24.5694 0H25.6827C30.8648 0 35.0753 4.21048 35.0753 9.3926C35.0753 14.5747 30.8648 18.7852 25.6827 18.7852Z" fill="#FC5A5A"/><path d="M40.4398 34.7364H39.2151C38.3852 34.7364 37.7071 34.0582 37.7071 33.2283C37.7071 32.3983 38.3852 31.7202 39.2151 31.7202H40.4398C43.962 31.7202 46.8163 28.8559 46.8163 25.3438V25.2324C46.8163 21.7102 43.9519 18.856 40.4398 18.856H38.7698C37.9398 18.856 37.2617 18.1779 37.2617 17.3479C37.2617 16.518 37.9398 15.8398 38.7698 15.8398H40.4398C45.6219 15.8398 49.8324 20.0503 49.8324 25.2324V25.3438C49.8324 30.5259 45.6219 34.7364 40.4398 34.7364Z" fill="#F8764E"/><path d="M25.9658 50.5054H24.8828C19.7007 50.5054 15.4902 46.2949 15.4902 41.1128C15.4902 35.9307 19.7007 31.7202 24.8828 31.7202H34.2451C35.075 31.7202 35.7531 32.3983 35.7531 33.2283C35.7531 34.0582 35.075 34.7364 34.2451 34.7364H24.8828C21.3606 34.7364 18.5064 37.6007 18.5064 41.1128C18.5064 44.6249 21.3707 47.4893 24.8828 47.4893H25.9658C29.488 47.4893 32.3423 44.6249 32.3423 41.1128V38.7343C32.3423 37.9044 33.0204 37.2262 33.8503 37.2262C34.6803 37.2262 35.3584 37.9044 35.3584 38.7343V41.1128C35.3584 46.2949 31.1479 50.5054 25.9658 50.5054Z" fill="#F8764E"/></g>
+    <path d="M62.7607 11.2742H68.8379C75.8794 11.2742 79.89 14.1826 79.89 19.2801C79.89 24.3775 75.8794 27.24 68.8379 27.24H65.3477V39.0881H62.776V11.2742H62.7607ZM65.3324 13.2948V25.2194H68.9603C74.4405 25.2194 77.1805 23.3213 77.1805 19.2801C77.1805 15.2388 74.4405 13.2948 68.9603 13.2948H65.3324Z" fill="black"/><path d="M84.1611 11.2741H84.9265C85.8144 11.2741 86.1971 11.2282 86.5338 11.0598V39.0881H84.1764V11.2741H84.1611Z" fill="black"/><path d="M90.9111 34.71C90.9111 31.0056 94.3247 29.8575 98.5803 29.4442C101.917 29.1074 102.958 28.7707 102.958 26.5358C102.958 23.9641 101.611 22.7395 98.6568 22.7395C96.0392 22.7395 94.2788 23.6732 93.4369 25.4336L91.7531 24.4692C92.8093 22.1119 95.5493 20.7954 98.9629 20.7954C103.05 20.7954 105.331 22.7701 105.331 26.995V39.088H103.019V35.7203C102.086 38.0777 99.8202 39.4248 96.6515 39.4248C93.1154 39.4248 90.9264 37.695 90.9264 34.71M102.958 32.0618V29.2758C102.331 30.4545 101.228 30.7913 98.8711 31.0515C95.58 31.3883 93.2226 32.0618 93.2226 34.557C93.2226 36.501 94.5697 37.6797 97.1413 37.6797C100.509 37.6797 102.958 35.7816 102.958 32.0771" fill="black"/><path d="M111.822 32.3527V22.9997H108.117V21.3618H109.556C111.745 21.3618 112.22 20.3056 112.22 18.5452V15.3459H112.602C113.444 15.3459 113.873 15.3 114.21 15.1316V21.1628H121.542V23.015H114.21V32.6282C114.21 36.1336 115.848 37.4807 118.052 37.4807C119.491 37.4807 120.669 36.8837 121.465 35.7969L123.073 36.9296C122.108 38.5369 120.241 39.4554 118.052 39.4554C114.301 39.4554 111.852 36.9756 111.852 32.368" fill="black"/><path d="M124.297 14.8255C124.297 13.8152 125.047 13.0498 126.073 13.0498C127.098 13.0498 127.879 13.8152 127.879 14.8255C127.879 15.8358 127.113 16.6012 126.073 16.6012C125.032 16.6012 124.297 15.8511 124.297 14.8255ZM124.879 21.1475H125.644C126.486 21.1475 126.914 21.1016 127.251 20.9332V39.1034H124.894V21.1475H124.879Z" fill="black"/><path d="M133.068 21.1476H133.834C134.722 21.1476 135.104 21.1016 135.441 20.9333V25.1888C136.497 22.3722 139.145 20.8108 142.36 20.8108C146.233 20.8108 148.422 22.9232 148.422 27.1328V39.1034H146.065V27.4237C146.065 24.1785 144.672 22.8773 141.763 22.8773C138.059 22.8773 135.441 25.1582 135.441 29.0769V39.1034H133.084V21.1476H133.068Z" fill="black"/><path d="M154.102 33.1179V21.1473H154.852C155.694 21.1473 156.122 21.1014 156.459 20.933V32.8117C156.459 36.057 157.806 37.3581 160.714 37.3581C164.342 37.3581 166.914 35.0773 166.914 31.1279V21.132H167.679C168.521 21.132 168.95 21.0861 169.287 20.9177V39.0879H166.929V35.0773C165.873 37.9092 163.301 39.4246 160.148 39.4246C156.275 39.4246 154.117 37.3122 154.117 33.1026" fill="black"/><path d="M175.088 21.1476H175.853C176.695 21.1476 177.124 21.1016 177.461 20.9333V25.1122C178.471 22.4181 180.92 20.8108 184.211 20.8108C187.502 20.8108 189.401 22.4181 189.936 25.3572C190.87 22.4946 193.472 20.8108 196.855 20.8108C200.652 20.8108 202.764 23.0457 202.764 27.1328V39.1034H200.407V27.4237C200.407 24.1785 199.06 22.8773 196.228 22.8773C192.646 22.8773 190.12 25.1582 190.12 29.0769V39.1034H187.763V27.4237C187.763 24.1785 186.416 22.8773 183.584 22.8773C180.002 22.8773 177.476 25.1582 177.476 29.0769V39.1034H175.118V21.1476H175.088Z" fill="black"/><path d="M208.765 11.2741H216.48C223.766 11.2741 227.777 13.9223 227.777 18.7748C227.777 22.5252 225.205 24.9744 220.613 25.5102V25.5867C224.822 25.8776 226.935 27.4849 226.935 32.0312V34.4345C226.935 36.547 227.394 37.9706 228.205 39.0727H224.241C223.521 38.1849 223.108 36.8378 223.108 34.6947V32.368C223.108 28.3727 221.638 26.9797 217.674 26.9797H212.576V39.0727H208.78V11.2588L208.765 11.2741ZM212.561 14.2285V24.1784H216.357C221.378 24.1784 223.812 22.5711 223.812 19.2034C223.812 15.8358 221.363 14.2285 216.357 14.2285H212.561Z" fill="black"/><path d="M238.094 29.8727L230.716 20.979H234.635L240.038 27.5919L245.473 20.979H249.269L241.845 29.735L249.728 39.1032H245.809L239.916 32.0158L234.099 39.1032H230.257L238.094 29.8727Z" fill="black"/><defs><clipPath id="clip0_3122_7084"><rect width="50.5151" height="50.5151" fill="white"/></clipPath></defs>
+    </svg>
+  </div>
+
+  <div class="card reveal d2">
+    <div class="intro reveal d3">
+      <h1>How are we doing?</h1>
+      <p>You've trusted us with your medicines for a while now — thank you. A minute of honest feedback helps us serve you better and decide what to build next.</p>
+    </div>
+    <div class="bar reveal d3"><i id="barFill"></i></div>
+    <form id="survey" novalidate>
+
+      <div class="q reveal d3" id="q1" data-name="overall_experience">
+        <div class="qhead"><span class="num">Q1</span><span class="qtext">How was your overall experience with PlatinumRx?</span></div>
+        <div class="opts rating">
+          <label class="opt" data-type="radio"><input type="radio" name="q1" value="5"><span class="score">5</span><span class="label">Excellent</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q1" value="4"><span class="score">4</span><span class="label">Very Good</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q1" value="3"><span class="score">3</span><span class="label">Good</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q1" value="2"><span class="score">2</span><span class="label">Poor</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q1" value="1"><span class="score">1</span><span class="label">Very Poor</span></label>
+        </div>
+      </div>
+
+      <div class="q hidden" id="q2a" data-name="liked_most">
+        <div class="qhead"><span class="num">Q2</span><span class="qtext">What did you like most about your experience?</span></div>
+        <div class="opts">
+          <label class="opt" data-type="radio"><input type="radio" name="q2a" value="Price savings on medicines"><span class="mark"></span><span class="label">Price savings on medicines</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q2a" value="Delivery was fast and on time"><span class="mark"></span><span class="label">Delivery was fast and on time</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q2a" value="Easy to use the app"><span class="mark"></span><span class="label">Easy to use the app</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q2a" value="I trust PlatinumRx as a brand"><span class="mark"></span><span class="label">I trust PlatinumRx as a brand</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q2a" value="Doctor's consultation"><span class="mark"></span><span class="label">Doctor's consultation</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q2a" value="Help from the support team"><span class="mark"></span><span class="label">Help from the support team</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q2a" value="Good packaging and genuine medicines"><span class="mark"></span><span class="label">Good packaging and genuine medicines</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q2a" value="Help after my order"><span class="mark"></span><span class="label">Help after my order</span></label>
+          <label class="opt" data-type="radio" data-other><input type="radio" name="q2a" value="Other"><span class="mark"></span><span class="label">Other</span></label>
+        </div>
+        <div class="other-wrap"><input type="text" data-other-for="q2a" placeholder="Tell us more…" maxlength="200"></div>
+      </div>
+
+      <div class="q hidden" id="q2b" data-name="could_be_better">
+        <div class="qhead"><span class="num">Q2</span><span class="qtext">What could have been better?</span></div>
+        <div class="opts">
+          <label class="opt" data-type="radio"><input type="radio" name="q2b" value="Delivery was slow or unreliable"><span class="mark"></span><span class="label">Delivery was slow or unreliable</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q2b" value="App was difficult to use"><span class="mark"></span><span class="label">App was difficult to use</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q2b" value="Found lower price elsewhere"><span class="mark"></span><span class="label">Found lower price elsewhere</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q2b" value="Customer support was poor"><span class="mark"></span><span class="label">Customer support was poor</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q2b" value="Packaging or medicine was damaged"><span class="mark"></span><span class="label">Packaging or medicine was damaged</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q2b" value="Didn't find the medicine I was looking for"><span class="mark"></span><span class="label">Didn't find the medicine I was looking for</span></label>
+          <label class="opt" data-type="radio" data-other><input type="radio" name="q2b" value="Other"><span class="mark"></span><span class="label">Other</span></label>
+        </div>
+        <div class="other-wrap"><input type="text" data-other-for="q2b" placeholder="Tell us more…" maxlength="200"></div>
+      </div>
+
+      <!-- Q3: pick top 2 (max-select 2 with auto-disable) -->
+      <div class="q hidden" id="q3" data-name="adjacency_interest">
+        <div class="qhead"><span class="num">Q3</span><span class="qtext">Which of these would you be most interested in buying from PlatinumRx?<span class="hint">Pick your top 2 · <span id="q3count" class="pickcount">0 / 2 selected</span></span></span></div>
+        <div class="opts" data-max="2">
+          <label class="opt" data-type="check"><input type="checkbox" name="q3" value="Free doctor consultations for your condition"><span class="mark"></span><span class="label">Free doctor consultations for your condition</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q3" value="Lab tests with home sample collection"><span class="mark"></span><span class="label">Lab tests with home sample collection</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q3" value="Smart devices to track sugar or BP all day"><span class="mark"></span><span class="label">Smart devices to track sugar or BP all day</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q3" value="Monthly delivery of test strips and supplies"><span class="mark"></span><span class="label">Monthly delivery of test strips and supplies</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q3" value="Vitamins and supplements recommended by a doctor"><span class="mark"></span><span class="label">Vitamins and supplements recommended by a doctor</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q3" value="A dietitian or nutritionist for your condition"><span class="mark"></span><span class="label">A dietitian or nutritionist for your condition</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q3" value="Emergency medicine delivered in 30 minutes"><span class="mark"></span><span class="label">Emergency medicine delivered in 30 minutes</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q3" value="Daily reminders to take your medicines on time"><span class="mark"></span><span class="label">Daily reminders to take your medicines on time</span></label>
+        </div>
+      </div>
+
+      <div class="q hidden" id="q4" data-name="other_sources">
+        <div class="qhead"><span class="num">Q4</span><span class="qtext">Where else have you bought medicines in the last 3 months?<span class="hint">Select all that apply</span></span></div>
+        <div class="opts">
+          <label class="opt" data-type="check"><input type="checkbox" name="q4" value="Tata 1mg"><span class="mark"></span><span class="label">Tata 1mg</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q4" value="Apollo 24x7"><span class="mark"></span><span class="label">Apollo 24x7</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q4" value="PharmEasy"><span class="mark"></span><span class="label">PharmEasy</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q4" value="TrueMeds"><span class="mark"></span><span class="label">TrueMeds</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q4" value="Netmeds"><span class="mark"></span><span class="label">Netmeds</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q4" value="Local chemist"><span class="mark"></span><span class="label">Local chemist</span></label>
+          <label class="opt" data-type="check"><input type="checkbox" name="q4" value="Hospital pharmacy"><span class="mark"></span><span class="label">Hospital pharmacy</span></label>
+          <label class="opt" data-type="check" data-exclusive><input type="checkbox" name="q4" value="Nowhere else, only PlatinumRx"><span class="mark"></span><span class="label">Nowhere else, only PlatinumRx</span></label>
+          <label class="opt" data-type="check" data-other><input type="checkbox" name="q4" value="Other"><span class="mark"></span><span class="label">Other</span></label>
+        </div>
+        <div class="other-wrap"><input type="text" data-other-for="q4" placeholder="Where else?" maxlength="200"></div>
+      </div>
+
+      <div class="q hidden" id="q5" data-name="reason_for_other_sources">
+        <div class="qhead"><span class="num">Q5</span><span class="qtext">What's the main reason you buy from them instead of PlatinumRx?</span></div>
+        <div class="opts">
+          <label class="opt" data-type="radio"><input type="radio" name="q5" value="Better prices"><span class="mark"></span><span class="label">Better prices</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q5" value="Faster delivery"><span class="mark"></span><span class="label">Faster delivery</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q5" value="More medicines available"><span class="mark"></span><span class="label">More medicines available</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q5" value="I trust them more"><span class="mark"></span><span class="label">I trust them more</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q5" value="Help from the pharmacist"><span class="mark"></span><span class="label">Help from the pharmacist</span></label>
+          <label class="opt" data-type="radio"><input type="radio" name="q5" value="It's convenient or out of habit"><span class="mark"></span><span class="label">It's convenient or out of habit</span></label>
+          <label class="opt" data-type="radio" data-other><input type="radio" name="q5" value="Other"><span class="mark"></span><span class="label">Other</span></label>
+        </div>
+        <div class="other-wrap"><input type="text" data-other-for="q5" placeholder="Tell us more…" maxlength="200"></div>
+      </div>
+
+      <div class="foot">
+        <div class="err" id="err">Please answer the visible questions before submitting.</div>
+        <button type="submit" class="submit">Submit feedback</button>
+        <div class="privacy">🔒 Your answers are private and only help us improve.</div>
+      </div>
+    </form>
+
+    <div class="done" id="done">
+      <div class="confetti"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="tick"><svg viewBox="0 0 80 80"><circle class="ring" cx="40" cy="40" r="36"/><circle class="ringfill" cx="40" cy="40" r="36" transform="rotate(-90 40 40)"/><path class="chk" d="M25 41 L36 52 L56 30"/></svg></div>
+      <h2>Thank you</h2>
+      <p>Your feedback helps us decide what to build next. Thank you for being with us.</p>
+      <div class="signoff">With Love, PlatinumRx</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyi6vviihgqSKfHwgfqy3LDqyjesZ3oNQKkALygVaFkYflkK6HHHHTjxOwI2t2TfslR/exec";
+const ALSO_DOWNLOAD = false;
+const FORM_TYPE = "active_chronic_generic_v1";
+
+const CAPTURE_KEYS=['uid','utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+function getTracking(){const p=new URLSearchParams(window.location.search);const o={};CAPTURE_KEYS.forEach(k=>{o[k]=p.get(k)||'';});return o;}
+function makeResponseId(){return 'r_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);}
+
+function applyLogic(){
+  const q1=selectedRadio('q1');
+  const positive=q1==='5'||q1==='4';
+  const negative=q1==='3'||q1==='2'||q1==='1';
+  show('q2a',positive);show('q2b',negative);
+  show('q3',!!q1);show('q4',!!q1);
+  const q4=selectedChecks('q4');
+  const boughtElsewhere=q4.length>0 && !(q4.length===1 && q4[0]==='Nowhere else, only PlatinumRx');
+  show('q5',boughtElsewhere);
+  updateProgress();
+}
+function selectedRadio(n){const el=document.querySelector(`input[name="${n}"]:checked`);return el?el.value:null;}
+function selectedChecks(n){return [...document.querySelectorAll(`input[name="${n}"]:checked`)].map(e=>e.value);}
+function show(id,on){document.getElementById(id).classList.toggle('hidden',!on);}
+function isVisible(id){return !document.getElementById(id).classList.contains('hidden');}
+function updateProgress(){
+  const vis=[...document.querySelectorAll('.q')].filter(q=>!q.classList.contains('hidden'));
+  let ans=0;
+  vis.forEach(q=>{const n=q.querySelector('input')?.name;if(!n)return;
+    if(q.querySelector('input[type=checkbox]')){if(selectedChecks(n).length)ans++;}else{if(selectedRadio(n))ans++;}});
+  document.getElementById('barFill').style.width=(vis.length?Math.round(ans/vis.length*100):0)+'%';
+}
+
+// max-select enforcer + counter for Q3
+function updateMaxSelect(group){
+  const max=parseInt(group.dataset.max||'0',10);
+  if(!max)return;
+  const checked=group.querySelectorAll('input:checked').length;
+  group.classList.toggle('limit-reached',checked>=max);
+  const counter=document.getElementById('q3count');
+  if(counter) counter.textContent=`${checked} / ${max} selected`;
+}
+
+document.querySelectorAll('.opt').forEach(opt=>{
+  const input=opt.querySelector('input');
+  input.addEventListener('change',()=>{
+    const group=opt.closest('.opts');
+    if(input.type==='radio'){
+      group.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+      opt.classList.add('sel');
+    }else{
+      // Enforce max-select cap BEFORE applying selection
+      const max=parseInt(group.dataset.max||'0',10);
+      if(max && input.checked){
+        const checkedCount=group.querySelectorAll('input:checked').length;
+        if(checkedCount>max){
+          // Shouldn't usually fire (we disable via CSS) but defensive
+          input.checked=false;
+          return;
+        }
+      }
+      if(opt.hasAttribute('data-exclusive')&&input.checked){
+        group.querySelectorAll('input[type=checkbox]').forEach(cb=>{if(cb!==input){cb.checked=false;cb.closest('.opt').classList.remove('sel');}});
+      }else if(input.checked){
+        const ex=group.querySelector('[data-exclusive] input');
+        if(ex&&ex.checked){ex.checked=false;ex.closest('.opt').classList.remove('sel');}
+      }
+      opt.classList.toggle('sel',input.checked);
+      updateMaxSelect(group);
+    }
+    toggleOther(group);
+    applyLogic();
+  });
+});
+function toggleOther(group){
+  const wrap=group.parentElement.querySelector('.other-wrap');
+  if(!wrap)return;
+  const oi=group.querySelector('[data-other] input');
+  const on=oi&&oi.checked;
+  wrap.classList.toggle('show',!!on);
+  if(on)setTimeout(()=>wrap.querySelector('input').focus(),140);
+}
+
+document.getElementById('survey').addEventListener('submit',e=>{
+  e.preventDefault();
+  const err=document.getElementById('err');
+  const vis=[...document.querySelectorAll('.q')].filter(q=>!q.classList.contains('hidden'));
+  for(const q of vis){
+    const n=q.querySelector('input')?.name;
+    const ok=q.querySelector('input[type=checkbox]')?selectedChecks(n).length>0:!!selectedRadio(n);
+    if(!ok){err.classList.remove('show');void err.offsetWidth;err.classList.add('show');q.scrollIntoView({behavior:'smooth',block:'center'});return;}
+  }
+  err.classList.remove('show');
+  const ot=n=>{const el=document.querySelector(`[data-other-for="${n}"]`);return el?el.value.trim():'';};
+  const data={
+    form_type:FORM_TYPE,
+    response_id:makeResponseId(),
+    submitted_at:new Date().toISOString(),
+    overall_experience:selectedRadio('q1'),
+    liked_most:isVisible('q2a')?withOther(selectedRadio('q2a'),ot('q2a')):null,
+    could_be_better:isVisible('q2b')?withOther(selectedRadio('q2b'),ot('q2b')):null,
+    adjacency_interest:isVisible('q3')?selectedChecks('q3'):null,
+    other_sources:isVisible('q4')?selectedChecks('q4').map(v=>v==='Other'?withOther('Other',ot('q4')):v):null,
+    reason_for_other_sources:isVisible('q5')?withOther(selectedRadio('q5'),ot('q5')):null,
+    ...getTracking()
+  };
+  let queued=false;
+  if(WEBHOOK_URL){
+    try{
+      const payload=JSON.stringify(data);
+      const blob=new Blob([payload],{type:'text/plain;charset=utf-8'});
+      if(navigator.sendBeacon){queued=navigator.sendBeacon(WEBHOOK_URL,blob);}
+      if(!queued){fetch(WEBHOOK_URL,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:payload}).catch(()=>{});queued=true;}
+    }catch(_){}
+  }
+  if(ALSO_DOWNLOAD||!queued)downloadJSON(data);
+  document.getElementById('survey').style.display='none';
+  document.querySelector('.intro').style.display='none';
+  document.querySelector('.bar').style.display='none';
+  document.getElementById('done').classList.add('show');
+  document.querySelector('.card').scrollIntoView({behavior:'smooth',block:'start'});
+});
+function withOther(v,t){return v==='Other'&&t?`Other: ${t}`:v;}
+function downloadJSON(d){const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`platinumrx-active-chronic-${Date.now()}.json`;a.click();URL.revokeObjectURL(a.href);}
+
+applyLogic();
+</script>
+</body>
+</html>
